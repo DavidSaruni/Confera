@@ -1,29 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { FeedbackChartCard } from "@/components/FeedbackCharts";
-import { getFeedbackData } from "@/lib/api/feedback.functions";
+import { fetchFeedback } from "@/lib/api/client";
 import type { FeedbackStats } from "@/lib/feedback.server";
 import { BarChart3, ExternalLink, Loader2, RefreshCw, Star } from "lucide-react";
 
-export const Route = createFileRoute("/feedback")({
-  head: () => ({
-    meta: [
-      { title: "Feedback · AHC 2026" },
-      {
-        name: "description",
-        content:
-          "Complete the conference evaluation form and view live response statistics from attendees.",
-      },
-    ],
-  }),
-  component: FeedbackPage,
-});
-
-function FeedbackPage() {
+export default function FeedbackPage() {
   const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["feedback"],
-    queryFn: () => getFeedbackData(),
+    queryFn: () => fetchFeedback(),
     refetchInterval: 60_000,
     staleTime: 30_000,
   });

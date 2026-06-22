@@ -1,20 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { useEffect, useRef, useState } from "react";
 import { loadProfile, saveProfile, clearProfile, profileToCsv, type Profile } from "@/lib/profile";
 import { Camera, Download, Trash2, CheckCircle2, BadgeCheck } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({
-  head: () => ({
-    meta: [
-      { title: "Your Profile · AHC 2026" },
-      { name: "description", content: "Manage your conference profile: upload a photo and bio, check in, edit personal details, or export your data as CSV." },
-    ],
-  }),
-  component: ProfilePage,
-});
-
-function ProfilePage() {
+export default function ProfilePage() {
   const [p, setP] = useState<Profile | null>(null);
   const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);

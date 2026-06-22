@@ -1,19 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { ANNOUNCEMENTS } from "@/data/conference";
 import { AlertTriangle, Bell, CheckCircle2 } from "lucide-react";
 
-export const Route = createFileRoute("/announcements")({
-  head: () => ({
-    meta: [
-      { title: "Announcements · AHC 2026" },
-      { name: "description", content: "Real-time updates: session reminders, room changes and important conference news." },
-    ],
-  }),
-  component: Announcements,
-});
-
-function Announcements() {
+export default function AnnouncementsPage() {
   return (
     <AppShell>
       <PageHeader

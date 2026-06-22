@@ -1,22 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { AppShell } from "@/components/AppShell";
 import { CONFERENCE, SPEAKERS, ANNOUNCEMENTS, SCHEDULE } from "@/data/conference";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import kabarakLogo from "@/public/images/Kabarak_University_Logo.png";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "AHC 2026 — Kabarak 16th Annual Health Conference" },
-      { name: "description", content: "Your companion app for the 16th Annual Health Conference: live schedules, breakout rooms, speakers, abstracts and announcements." },
-      { property: "og:title", content: "AHC 2026 — Kabarak 16th Annual Health Conference" },
-      { property: "og:description", content: "Stronger Systems, Healthier Communities, Shared Future. 25–26 June 2026, Kabarak University." },
-    ],
-  }),
-  component: Index,
-});
-
-function Index() {
+export default function HomePage() {
   const next = SCHEDULE[0].items.slice(0, 3);
   return (
     <AppShell>
@@ -52,7 +40,7 @@ function Index() {
 
           <div className="mt-6 max-w-2xl rounded-2xl border border-border/70 bg-background/70 p-4 backdrop-blur">
             <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-primary">Theme</div>
-            <p className="mt-1 font-display text-lg leading-snug text-foreground">“{CONFERENCE.theme}”</p>
+            <p className="mt-1 font-display text-lg leading-snug text-foreground">"{CONFERENCE.theme}"</p>
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">
               <Sparkles className="h-3.5 w-3.5 text-gold" />
               {CONFERENCE.tagline}

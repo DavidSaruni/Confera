@@ -1,18 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { SPEAKERS, ABSTRACTS, type Speaker } from "@/data/conference";
 import { Mail, BookOpen, X, ExternalLink } from "lucide-react";
 import { useState } from "react";
-
-export const Route = createFileRoute("/speakers")({
-  head: () => ({
-    meta: [
-      { title: "Speakers · AHC 2026" },
-      { name: "description", content: "Keynote, guest and presenter speakers at the 16th Annual Health Conference — full bios, abstracts and session assignments." },
-    ],
-  }),
-  component: Speakers,
-});
 
 function initialsOf(name: string) {
   const parts = name.replace(/,.*$/, "").trim().split(/\s+/).filter(p => !/^(dr\.?|prof(essor)?\.?|mr\.?|mrs\.?|ms\.?|ogw)$/i.test(p));
@@ -23,12 +12,11 @@ function searchUrl(name: string) {
   return `https://www.linkedin.com/pub/dir/?firstAndLast=${encodeURIComponent(name)}`;
 }
 
-function Speakers() {
+export default function SpeakersPage() {
   const [selected, setSelected] = useState<Speaker | null>(null);
 
   const keynotes = SPEAKERS.filter((s) => s.role !== "Speaker / Presenter");
   const presenters = SPEAKERS.filter((s) => s.role === "Speaker / Presenter");
-
 
   return (
     <AppShell>
@@ -133,7 +121,6 @@ function SpeakerModal({ s, onClose }: { s: Speaker; onClose: () => void }) {
               </div>
             )}
           </div>
-
 
           <div className="mt-4">
             <div className="text-[10px] uppercase tracking-[0.22em] text-primary">{s.role}</div>

@@ -1,19 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { SCHEDULE, CONFERENCE } from "@/data/conference";
 import { ExternalLink } from "lucide-react";
 
-export const Route = createFileRoute("/schedule")({
-  head: () => ({
-    meta: [
-      { title: "Program Schedule · AHC 2026" },
-      { name: "description", content: "Full two-day agenda for the 16th Annual Health Conference at Kabarak University, synced to the official Google Drive folder." },
-    ],
-  }),
-  component: Schedule,
-});
-
-function Schedule() {
+export default function SchedulePage() {
   return (
     <AppShell>
       <PageHeader

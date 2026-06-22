@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Bell, Calendar, Image as ImageIcon, BookOpen, Mic2, Building2, Video, Home, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 import { CONFERENCE } from "@/data/conference";

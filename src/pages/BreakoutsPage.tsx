@@ -1,19 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { BREAKOUTS } from "@/data/conference";
 import { Video, Users } from "lucide-react";
 
-export const Route = createFileRoute("/breakouts")({
-  head: () => ({
-    meta: [
-      { title: "Breakout Rooms · AHC 2026" },
-      { name: "description", content: "Browse virtual breakout rooms by topic and join via Zoom with one tap." },
-    ],
-  }),
-  component: Breakouts,
-});
-
-function Breakouts() {
+export default function BreakoutsPage() {
   return (
     <AppShell>
       <PageHeader

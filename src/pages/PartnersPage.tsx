@@ -1,20 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { PARTNERS } from "@/data/conference";
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/partners")({
-  head: () => ({
-    meta: [
-      { title: "Partners · AHC 2026" },
-      { name: "description", content: "Institutional partners of the 16th Annual Health Conference — Millersville University, UTMB Health, KMPDC and more." },
-    ],
-  }),
-  component: Partners,
-});
-
-function Partners() {
+export default function PartnersPage() {
   return (
     <AppShell>
       <PageHeader

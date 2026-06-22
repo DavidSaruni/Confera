@@ -1,29 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CONFERENCE } from "@/data/conference";
-import { getGalleryImages } from "@/lib/api/gallery.functions";
+import { fetchGalleryImages } from "@/lib/api/client";
 import { ExternalLink, ImageIcon, Loader2 } from "lucide-react";
-
-export const Route = createFileRoute("/gallery")({
-  head: () => ({
-    meta: [
-      { title: "Gallery · AHC 2026" },
-      { name: "description", content: "Curated photos from keynote moments and networking highlights at the 16th Annual Health Conference." },
-    ],
-  }),
-  component: Gallery,
-});
 
 function galleryLinkLabel(url: string) {
   if (/photos\.(google\.com|app\.goo\.gl)/i.test(url)) return "Open full Google Photos album";
   return "Open full Google Drive gallery";
 }
 
-function Gallery() {
+export default function GalleryPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gallery-images"],
-    queryFn: () => getGalleryImages(),
+    queryFn: () => fetchGalleryImages(),
     staleTime: 60 * 60 * 1000,
   });
 

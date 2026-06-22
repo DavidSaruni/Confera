@@ -1,27 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CONFERENCE } from "@/data/conference";
-import { getAbstracts } from "@/lib/api/abstracts.functions";
+import { fetchAbstracts } from "@/lib/api/client";
 import type { Abstract } from "@/lib/abstracts.server";
 import { useMemo, useState } from "react";
 import { Search, FileText, ExternalLink, Loader2 } from "lucide-react";
 
-export const Route = createFileRoute("/abstracts")({
-  head: () => ({
-    meta: [
-      { title: "Book of Abstracts · AHC 2026" },
-      { name: "description", content: "Searchable repository of all accepted abstracts for the 16th Annual Health Conference. Find papers by author, title or code." },
-    ],
-  }),
-  component: Abstracts,
-});
-
-function Abstracts() {
+export default function AbstractsPage() {
   const [q, setQ] = useState("");
   const { data, isLoading, isError } = useQuery({
     queryKey: ["abstracts"],
-    queryFn: () => getAbstracts(),
+    queryFn: () => fetchAbstracts(),
     staleTime: 30 * 60 * 1000,
   });
 
@@ -95,7 +84,7 @@ function Abstracts() {
           ))}
           {!isLoading && filtered.length === 0 && (
             <li className="p-8 text-center text-sm text-muted-foreground">
-              {abstracts.length === 0 ? "No abstracts are available yet." : `No abstracts match “${q}”.`}
+              {abstracts.length === 0 ? "No abstracts are available yet." : `No abstracts match "${q}".`}
             </li>
           )}
         </ul>
