@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { CONFERENCE, SPEAKERS, ANNOUNCEMENTS, SCHEDULE } from "@/data/conference";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
-import logoAsset from "@/assets/kabarak-logo.png.asset.json";
+import kabarakLogo from "@/public/images/Kabarak_University_Logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +26,7 @@ function Index() {
         <div className="relative px-6 pb-8 pt-6 sm:px-10 sm:pb-10 sm:pt-8">
           <div className="mb-4 flex items-center gap-3">
             <img
-              src={logoAsset.url}
+              src={kabarakLogo}
               alt="Kabarak University"
               width={96}
               height={96}
