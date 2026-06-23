@@ -2,9 +2,18 @@ const PHOTO_ID_RE = /https:\/\/lh3\.googleusercontent\.com\/pw\/(AP1Gcz[A-Za-z0-
 const USERCONTENT_RE = /https:\/\/lh3\.googleusercontent\.com\/[^"'\\\s<>)]+/g;
 const DRIVE_FILE_RE = /https:\/\/drive\.google\.com\/(?:file\/d\/|uc\?[^"']*id=)([a-zA-Z0-9_-]+)/g;
 
-type GalleryCache = { images: string[]; expires: number };
-const cache = new Map<string, GalleryCache>();
-const CACHE_TTL_MS = 60 * 60 * 1000;
+export function isAllowedGalleryUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname;
+    return (
+      host.endsWith("google.com") ||
+      host.endsWith("googleusercontent.com") ||
+      host === "photos.app.goo.gl"
+    );
+  } catch {
+    return false;
+  }
+}
 
 function normalizeShareUrl(url: string): string {
   try {
@@ -45,9 +54,9 @@ function extractGooglePhotosUrls(html: string): string[] {
 
   const urls = new Set<string>();
   for (const match of html.matchAll(USERCONTENT_RE)) {
-    const url = sizedUserContentUrl(match[0]);
-    if (!url.includes("googleusercontent.com")) continue;
-    urls.add(url);
+    const imageUrl = sizedUserContentUrl(match[0]);
+    if (!imageUrl.includes("googleusercontent.com")) continue;
+    urls.add(imageUrl);
   }
   return [...urls];
 }
@@ -55,10 +64,7 @@ function extractGooglePhotosUrls(html: string): string[] {
 function extractGoogleDriveUrls(html: string): string[] {
   const fileIds = new Set<string>();
   for (const match of html.matchAll(DRIVE_FILE_RE)) fileIds.add(match[1]);
-
-  return [...fileIds].map(
-    (id) => `https://drive.google.com/thumbnail?id=${id}&sz=w1600`,
-  );
+  return [...fileIds].map((id) => `https://drive.google.com/thumbnail?id=${id}&sz=w1600`);
 }
 
 function isGooglePhotosUrl(url: string): boolean {
@@ -69,12 +75,10 @@ function isGoogleDriveUrl(url: string): boolean {
   return /drive\.google\.com/i.test(url);
 }
 
-export function isGalleryShareConfigured(url: string): boolean {
-  return !/your-gallery-folder-id|your-schedule-folder-id/i.test(url);
-}
+export async function fetchGalleryImagesFromShare(shareUrl: string): Promise<string[]> {
+  const targetUrl = isGooglePhotosUrl(shareUrl) ? normalizeShareUrl(shareUrl) : shareUrl;
 
-async function fetchShareHtml(url: string): Promise<string> {
-  const response = await fetch(url, {
+  const response = await fetch(targetUrl, {
     headers: {
       "User-Agent": "Mozilla/5.0 (compatible; AHC2026Gallery/1.0)",
       Accept: "text/html,application/xhtml+xml",
@@ -87,22 +91,8 @@ async function fetchShareHtml(url: string): Promise<string> {
     throw new Error(`Gallery fetch failed (${response.status})`);
   }
 
-  return response.text();
-}
-
-export async function fetchGalleryImages(shareUrl: string): Promise<string[]> {
-  if (!isGalleryShareConfigured(shareUrl)) return [];
-
-  const cached = cache.get(shareUrl);
-  if (cached && cached.expires > Date.now()) return cached.images;
-
-  const targetUrl = isGooglePhotosUrl(shareUrl) ? normalizeShareUrl(shareUrl) : shareUrl;
-  const html = await fetchShareHtml(targetUrl);
-
-  const images = isGoogleDriveUrl(shareUrl)
+  const html = await response.text();
+  return isGoogleDriveUrl(shareUrl)
     ? extractGoogleDriveUrls(html)
     : extractGooglePhotosUrls(html);
-
-  cache.set(shareUrl, { images, expires: Date.now() + CACHE_TTL_MS });
-  return images;
 }

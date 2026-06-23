@@ -14,6 +14,7 @@ export const CONFERENCE = {
     "https://docs.google.com/spreadsheets/d/1-g8AOEs7IEg55mo2iw_CcC-TwBv4lha3/edit?usp=sharing",
   feedbackFormUrl:
     "https://docs.google.com/forms/d/e/1FAIpQLScBC341XratqO45cH4smFBQ2aTQNzv3NorSGjuHMvKi4hWw9w/viewform?usp=sharing&ouid=108396909533377471737",
+  feedbackFormTitle: "16th Annual Health Conference — Evaluation Form",
   // Link the form to Google Sheets (Responses → Link to Sheets), share the sheet, then paste its URL here.
   feedbackResponsesSheetUrl:
     "https://docs.google.com/spreadsheets/d/1SD3ptuRDnDd2DXoMN63VJuoH2bA2VWdcftiJLw6S0Uo/edit?usp=sharing",

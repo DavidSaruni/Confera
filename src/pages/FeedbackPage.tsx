@@ -1,19 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { FeedbackChartCard } from "@/components/FeedbackCharts";
-import { fetchFeedback } from "@/lib/api/client";
+import { CONFERENCE } from "@/data/conference";
+import { fetchFeedbackStatsOnly, spreadsheetEmbedUrl } from "@/lib/api/client";
+import { toFeedbackEmbedUrl } from "@/lib/feedback.server";
 import type { FeedbackStats } from "@/lib/feedback.server";
 import { BarChart3, ExternalLink, Loader2, RefreshCw, Star } from "lucide-react";
 
+const embedUrl = toFeedbackEmbedUrl(CONFERENCE.feedbackFormUrl);
+const formUrl = CONFERENCE.feedbackFormUrl;
+
 export default function FeedbackPage() {
-  const { data, isLoading, isError, isFetching, refetch } = useQuery({
-    queryKey: ["feedback"],
-    queryFn: () => fetchFeedback(),
+  const { data: stats, isLoading, isError, isFetching, refetch } = useQuery({
+    queryKey: ["feedback-stats"],
+    queryFn: () => fetchFeedbackStatsOnly(),
     refetchInterval: 60_000,
     staleTime: 30_000,
   });
-
-  const stats = data?.stats;
 
   return (
     <AppShell>
@@ -24,16 +27,14 @@ export default function FeedbackPage() {
       />
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        {data?.formUrl && (
-          <a
-            href={data.formUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
-          >
-            Open form in new tab <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        )}
+        <a
+          href={formUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+        >
+          Open form in new tab <ExternalLink className="h-3.5 w-3.5" />
+        </a>
         <button
           type="button"
           onClick={() => refetch()}
@@ -49,21 +50,15 @@ export default function FeedbackPage() {
         <div className="border-b border-border px-5 py-4">
           <h2 className="font-display text-lg text-foreground">Evaluation form</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            {stats?.formTitle ?? "Submit your evaluation using the embedded form below."}
+            {CONFERENCE.feedbackFormTitle ?? "Submit your evaluation using the embedded form below."}
           </p>
         </div>
-        {data?.embedUrl ? (
-          <iframe
-            src={data.embedUrl}
-            title={stats?.formTitle ?? "Conference evaluation form"}
-            className="block min-h-[2200px] w-full border-0 bg-background"
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex min-h-[320px] items-center justify-center p-8 text-sm text-muted-foreground">
-            {isLoading ? "Loading form…" : "Evaluation form unavailable."}
-          </div>
-        )}
+        <iframe
+          src={embedUrl}
+          title={CONFERENCE.feedbackFormTitle ?? "Conference evaluation form"}
+          className="block min-h-[2200px] w-full border-0 bg-background"
+          loading="lazy"
+        />
       </section>
 
       <FeedbackSummary stats={stats} isLoading={isLoading} isError={isError} />
@@ -92,9 +87,26 @@ function FeedbackSummary({
   }
 
   if (isError || !stats) {
+    const sheetEmbed = spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl);
     return (
-      <div className="rounded-2xl border border-border bg-card p-6 card-elev">
-        <p className="text-sm text-muted-foreground">Could not load response statistics.</p>
+      <div className="space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 card-elev">
+          <p className="text-sm text-muted-foreground">Could not load response statistics.</p>
+        </div>
+        {sheetEmbed && (
+          <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
+            <div className="border-b border-border px-5 py-4">
+              <h2 className="font-display text-lg text-foreground">Responses spreadsheet</h2>
+              <p className="mt-1 text-xs text-muted-foreground">View raw form responses in Google Sheets.</p>
+            </div>
+            <iframe
+              src={sheetEmbed}
+              title="Feedback responses spreadsheet"
+              className="block min-h-[500px] w-full border-0 bg-background"
+              loading="lazy"
+            />
+          </section>
+        )}
       </div>
     );
   }
@@ -135,6 +147,21 @@ function FeedbackSummary({
           </p>
         )}
       </div>
+
+      {stats.source === "unavailable" && spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl) && (
+        <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
+          <div className="border-b border-border px-5 py-4">
+            <h2 className="font-display text-lg text-foreground">Responses spreadsheet</h2>
+            <p className="mt-1 text-xs text-muted-foreground">View raw form responses in Google Sheets.</p>
+          </div>
+          <iframe
+            src={spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl)!}
+            title="Feedback responses spreadsheet"
+            className="block min-h-[500px] w-full border-0 bg-background"
+            loading="lazy"
+          />
+        </section>
+      )}
 
       {stats.charts.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

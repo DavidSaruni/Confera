@@ -2,21 +2,26 @@ import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
 import { CONFERENCE } from "@/data/conference";
 import { fetchGalleryImages } from "@/lib/api/client";
+import {
+  galleryLinkLabel,
+  isGoogleDriveFolderUrl,
+  toDriveFolderEmbedUrl,
+} from "@/lib/gallery";
 import { ExternalLink, ImageIcon, Loader2 } from "lucide-react";
 
-function galleryLinkLabel(url: string) {
-  if (/photos\.(google\.com|app\.goo\.gl)/i.test(url)) return "Open full Google Photos album";
-  return "Open full Google Drive gallery";
-}
-
 export default function GalleryPage() {
+  const albumUrl = CONFERENCE.driveGalleryUrl;
+  const driveEmbed = toDriveFolderEmbedUrl(albumUrl);
+  const isDriveFolder = isGoogleDriveFolderUrl(albumUrl);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["gallery-images"],
+    queryKey: ["gallery-images", albumUrl],
     queryFn: () => fetchGalleryImages(),
     staleTime: 60 * 60 * 1000,
+    enabled: !isDriveFolder,
   });
 
-  const images = data?.images ?? [];
+  const images = isDriveFolder ? [] : (data?.images ?? []);
   const fromShare = data?.source === "share";
 
   return (
@@ -24,31 +29,44 @@ export default function GalleryPage() {
       <PageHeader
         eyebrow="Gallery"
         title="Moments from AHC 2026"
-        subtitle="Relive keynote sessions, panel discussions and networking highlights. Photos sync from the official shared album."
+        subtitle="Browse conference photos below. Images are loaded from the official shared album."
       />
+
       <a
-        href={CONFERENCE.driveGalleryUrl}
+        href={albumUrl}
         target="_blank"
         rel="noreferrer"
         className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
       >
-        {galleryLinkLabel(CONFERENCE.driveGalleryUrl)} <ExternalLink className="h-3.5 w-3.5" />
+        {galleryLinkLabel(albumUrl)} <ExternalLink className="h-3.5 w-3.5" />
       </a>
 
-      {isLoading && (
+      {isDriveFolder && driveEmbed && (
+        <section className="mb-8 overflow-hidden rounded-2xl border border-border bg-card card-elev">
+          <iframe
+            src={driveEmbed}
+            title="AHC 2026 photo gallery"
+            className="block min-h-[75vh] w-full border-0 bg-background"
+            loading="lazy"
+            allow="autoplay"
+          />
+        </section>
+      )}
+
+      {!isDriveFolder && isLoading && (
         <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading photos from the shared album…
         </div>
       )}
 
-      {!isLoading && isError && (
+      {!isDriveFolder && !isLoading && isError && (
         <p className="mb-6 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
           Could not load the shared album right now. Try opening the album link above.
         </p>
       )}
 
-      {!isLoading && images.length === 0 && (
+      {!isDriveFolder && !isLoading && images.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
           <ImageIcon className="h-10 w-10 text-muted-foreground/60" />
           <p className="max-w-md text-sm text-muted-foreground">
@@ -57,7 +75,7 @@ export default function GalleryPage() {
         </div>
       )}
 
-      {images.length > 0 && (
+      {!isDriveFolder && images.length > 0 && (
         <>
           {fromShare && (
             <p className="mb-4 text-xs text-muted-foreground">
@@ -66,7 +84,10 @@ export default function GalleryPage() {
           )}
           <div className="columns-2 gap-3 sm:columns-3 [&>*]:mb-3">
             {images.map((src, i) => (
-              <div key={`${src}-${i}`} className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card card-elev">
+              <div
+                key={`${src}-${i}`}
+                className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card card-elev"
+              >
                 <img
                   src={src}
                   alt={`Conference moment ${i + 1}`}

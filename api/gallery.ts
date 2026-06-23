@@ -1,12 +1,22 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getGalleryData } from "../src/server/api-handler";
+export const config = { runtime: "edge" };
 
-export default async function handler(_req: VercelRequest, res: VercelResponse) {
+import { fetchGalleryImagesFromShare, isAllowedGalleryUrl } from "../src/lib/gallery-fetch";
+
+export default async function handler(request: Request): Promise<Response> {
+  const albumUrl = new URL(request.url).searchParams.get("url");
+
+  if (!albumUrl || !isAllowedGalleryUrl(albumUrl)) {
+    return Response.json({ error: "Invalid or missing gallery URL" }, { status: 400 });
+  }
+
   try {
-    const data = await getGalleryData();
-    res.status(200).json(data);
+    const images = await fetchGalleryImagesFromShare(albumUrl);
+    return Response.json(
+      { images, source: images.length > 0 ? "share" : "empty" },
+      { headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600" } },
+    );
   } catch (error) {
     console.error("[api/gallery]", error);
-    res.status(500).json({ error: "Failed to load gallery" });
+    return Response.json({ error: "Failed to load gallery" }, { status: 500 });
   }
 }

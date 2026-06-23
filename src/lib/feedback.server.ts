@@ -287,30 +287,10 @@ async function fetchSheetCsv(spreadsheetId: string): Promise<string> {
   throw lastError ?? new Error("Could not load responses spreadsheet");
 }
 
-async function fetchFormTitle(formUrl: string): Promise<string | null> {
-  const formId = extractFormId(formUrl);
-  if (!formId) return null;
-
-  try {
-    const response = await fetch(`https://docs.google.com/forms/d/e/${formId}/viewform`, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; AHC2026Feedback/1.0)",
-        "Accept-Language": "en-US,en;q=0.9",
-      },
-    });
-    if (!response.ok) return null;
-
-    const html = await response.text();
-    const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
-    return titleMatch?.[1]?.replace(/\s*-\s*Google Forms.*$/i, "").trim() ?? null;
-  } catch {
-    return null;
-  }
-}
-
 export async function fetchFeedbackStats(
   formUrl: string,
   responsesSheetUrl: string,
+  formTitle?: string | null,
 ): Promise<FeedbackStats> {
   const spreadsheetId = extractSpreadsheetId(responsesSheetUrl);
   if (!spreadsheetId) {
@@ -324,13 +304,10 @@ export async function fetchFeedbackStats(
   if (cached && cached.expires > Date.now()) return cached.stats;
 
   try {
-    const [csv, formTitle] = await Promise.all([
-      fetchSheetCsv(spreadsheetId),
-      fetchFormTitle(formUrl),
-    ]);
+    const csv = await fetchSheetCsv(spreadsheetId);
     const stats: FeedbackStats = {
       ...computeStats(parseCsv(csv)),
-      formTitle,
+      formTitle: formTitle ?? null,
     };
     cache.set(cacheKey, { stats, expires: Date.now() + CACHE_TTL_MS });
     return stats;
