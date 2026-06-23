@@ -1,27 +1,23 @@
-import { AppShell, PageHeader, isConfiguredExternalUrl } from "@/components/AppShell";
+import { AppShell, PageHeader } from "@/components/AppShell";
 import { SCHEDULE, CONFERENCE } from "@/data/conference";
 import { ExternalLink } from "lucide-react";
 
 export default function SchedulePage() {
-  const showDriveLink = isConfiguredExternalUrl(CONFERENCE.driveScheduleUrl);
-
   return (
     <AppShell>
       <PageHeader
         eyebrow="Program"
         title="Conference schedule"
-        subtitle="Two days of keynotes, plenaries and breakout rounds. Last-minute changes will appear here first."
+        subtitle="Two days of keynotes, plenaries and breakout rounds. Synced live with the official Google Drive folder — last-minute changes appear here first."
       />
-      {showDriveLink && (
-        <a
-          href={CONFERENCE.driveScheduleUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
-        >
-          Open Google Drive folder <ExternalLink className="h-3.5 w-3.5" />
-        </a>
-      )}
+      <a
+        href={CONFERENCE.driveScheduleUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+      >
+        Open Google Drive folder <ExternalLink className="h-3.5 w-3.5" />
+      </a>
 
       <div className="space-y-10">
         {SCHEDULE.map((day) => (
