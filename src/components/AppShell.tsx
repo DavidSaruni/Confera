@@ -42,7 +42,7 @@ const NAV: NavItem[] = [
   { to: "/feedback", label: "Feedback", shortLabel: "Feedback", icon: MessageSquare },
 ];
 
-const MOBILE_TAB_PATHS = ["/", "/abstracts", "/gallery", "/partners"] as const;
+const MOBILE_TAB_PATHS = ["/", "/schedule", "/abstracts", "/gallery"] as const;
 
 export function isConfiguredExternalUrl(url: string): boolean {
   return Boolean(url && !/your-[\w-]*-id/i.test(url));
@@ -134,9 +134,7 @@ function Header() {
 
 function MobileTabBar({ pathname }: { pathname: string }) {
   const [moreOpen, setMoreOpen] = useState(false);
-  const primaryTabs = NAV.filter((n) =>
-    (MOBILE_TAB_PATHS as readonly string[]).includes(n.to),
-  );
+  const primaryTabs = MOBILE_TAB_PATHS.map((path) => NAV.find((n) => n.to === path)!);
   const moreTabs = NAV.filter((n) => !(MOBILE_TAB_PATHS as readonly string[]).includes(n.to));
   const moreActive = moreTabs.some((n) => n.to === pathname);
 
