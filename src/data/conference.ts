@@ -195,13 +195,104 @@ export const PARTNERS = [
   },
 ];
 
-export const BREAKOUTS = [
-  { id: "uhc", topic: "Universal Health Coverage", host: "Dr. Aluoch", speaker: "Dr David Gicheru Kariuki", speakerRole: "Session Chair · CEO, KMPDC", platform: "Zoom", link: "https://zoom.us/j/000000001", time: "Day 1 · 14:00 – 15:30", capacity: 80 },
-  { id: "digital", topic: "Digital Health & AI", host: "Dr. Mutua", speaker: "Dr. Benard Mutua", speakerRole: "Session Chair · Kabarak University", platform: "Zoom", link: "https://zoom.us/j/000000005", time: "Day 1 · 14:00 – 15:30", capacity: 60 },
-  { id: "maternal", topic: "Maternal & Child Health", host: "Dr. Mumo", speaker: "Dr. L. Mumo", speakerRole: "Session Chair · Kabarak University", platform: "Zoom", link: "https://zoom.us/j/000000002", time: "Day 1 · 16:00 – 17:30", capacity: 80 },
-  { id: "tropical", topic: "Tropical & Infectious Diseases", host: "UTMB Faculty", speaker: "UTMB Tropical Medicine Faculty", speakerRole: "Session Chair · UTMB Health", platform: "Zoom", link: "https://zoom.us/j/000000003", time: "Day 2 · 11:00 – 12:30", capacity: 100 },
-  { id: "equity", topic: "Health Equity & Policy", host: "Dr. Oluga", speaker: "Dr. Fredrick Ouma Oluga, OGW", speakerRole: "Session Chair · PS, Medical Health Services", platform: "Zoom", link: "https://zoom.us/j/000000006", time: "Day 2 · 14:00 – 15:30", capacity: 70 },
-  { id: "research", topic: "Research Methods & Publishing", host: "Prof. Wubah", speaker: "Professor Daniel A. Wubah", speakerRole: "Session Chair · President, Millersville University", platform: "Zoom", link: "https://zoom.us/j/000000004", time: "Day 2 · 16:00 – 17:30", capacity: 90 },
+export type BreakoutModerator = {
+  name: string;
+  school: string;
+};
+
+export type BreakoutSession = {
+  id: string;
+  dayLabel: string;
+  sessionLabel: string;
+  time: string;
+  topic: string;
+  moderators: BreakoutModerator[];
+  rapporteur: string;
+  link?: string | null;
+};
+
+export const BREAKOUTS: BreakoutSession[] = [
+  {
+    id: "day1-breakout-1",
+    dayLabel: "Day 1 — Thursday, 25 June 2026",
+    sessionLabel: "Breakout 1",
+    time: "14:20 – 16:30",
+    topic: "Health Technology, Innovation, and Pharmaceutical Sciences",
+    moderators: [
+      { name: "Dr. Thrizza Kiplagat", school: "School of Pharmacy" },
+      { name: "Dr. Benard Kioko", school: "School of Pharmacy" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
+  {
+    id: "day1-breakout-2",
+    dayLabel: "Day 1 — Thursday, 25 June 2026",
+    sessionLabel: "Breakout 2",
+    time: "14:20 – 16:30",
+    topic: "Advancing Nursing Education, Practice Policy and Leadership",
+    moderators: [
+      { name: "Dr. Sam Mulongo", school: "School of Medicine and Health Sciences" },
+      { name: "Dr. Phillip Towett", school: "School of Medicine and Health Sciences" },
+      { name: "Ms. Valerie Suge", school: "School of Medicine and Health Sciences" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
+  {
+    id: "day1-breakout-3",
+    dayLabel: "Day 1 — Thursday, 25 June 2026",
+    sessionLabel: "Breakout 3",
+    time: "14:20 – 16:30",
+    topic: "Health Systems Resilience, Biosafety, AMR and TB Control",
+    moderators: [
+      { name: "Dr. Miriam Muga", school: "School of Medicine and Health Sciences" },
+      { name: "Dr. Jim Khamisi", school: "School of Pharmacy" },
+      { name: "Dr. Jonathan Nthusi", school: "School of Medicine and Health Sciences" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
+  {
+    id: "day2-breakout-1",
+    dayLabel: "Day 2 — Friday, 26 June 2026",
+    sessionLabel: "Breakout 1",
+    time: "08:40 – 09:40",
+    topic: "Nutrition, Health Technology, Pediatric Care and Lifestyle Interventions",
+    moderators: [
+      { name: "Dr. Phyllis Waruguru", school: "School of Medicine and Health Sciences" },
+      { name: "Dr. Wesley Bor", school: "School of Medicine and Health Sciences" },
+      { name: "Dr. Shadrack Bett", school: "School of Medicine and Health Sciences" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
+  {
+    id: "day2-breakout-2",
+    dayLabel: "Day 2 — Friday, 26 June 2026",
+    sessionLabel: "Breakout 2",
+    time: "08:40 – 09:40",
+    topic: "Emergency Response, Maternal-Newborn Health and Workforce Resilience",
+    moderators: [
+      { name: "Dr. Jonathan Nthusi", school: "School of Medicine and Health Sciences" },
+      { name: "Dr. Norah Talam", school: "School of Medicine and Health Sciences" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
+  {
+    id: "day2-breakout-3",
+    dayLabel: "Day 2 — Friday, 26 June 2026",
+    sessionLabel: "Breakout 3",
+    time: "08:40 – 09:40",
+    topic: "Preventive Health, Prediction Tools and Occupational Determinants",
+    moderators: [
+      { name: "Dr. Doris Kibiwott", school: "School of Medicine and Health Sciences" },
+      { name: "Mr. Samuel Kingi", school: "School of Medicine and Health Sciences" },
+    ],
+    rapporteur: "SMHS & SOP (TBC)",
+    link: null,
+  },
 ];
 
 export const SCHEDULE = [
