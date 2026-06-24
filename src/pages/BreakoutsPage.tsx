@@ -21,7 +21,7 @@ export default function BreakoutsPage() {
       <PageHeader
         eyebrow="Breakout Rooms · Zoom"
         title="Join a session"
-        subtitle="Breakouts run on Zoom across both conference days. Zoom links for each room will be published here shortly."
+        subtitle="Breakouts run on Zoom across both conference days. Pick a topic and tap Join to enter your room."
       />
 
       <div className="space-y-10">

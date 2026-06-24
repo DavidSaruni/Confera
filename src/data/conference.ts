@@ -223,7 +223,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Benard Kioko", school: "School of Pharmacy" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/85043184504",
   },
   {
     id: "day1-breakout-2",
@@ -237,7 +237,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Ms. Valerie Suge", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/81962756897",
   },
   {
     id: "day1-breakout-3",
@@ -251,7 +251,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Jonathan Nthusi", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/89745671901",
   },
   {
     id: "day2-breakout-1",
@@ -265,7 +265,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Shadrack Bett", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/85124506254",
   },
   {
     id: "day2-breakout-2",
@@ -278,7 +278,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Norah Talam", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/84528541990",
   },
   {
     id: "day2-breakout-3",
@@ -291,7 +291,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Mr. Samuel Kingi", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: null,
+    link: "https://kabarak-ac-ke.zoom.us/j/88611721780",
   },
 ];
 
