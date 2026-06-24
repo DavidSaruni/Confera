@@ -324,10 +324,9 @@ export const SCHEDULE = [
 ];
 
 export const ANNOUNCEMENTS = [
-  { id: 1, when: "Today · 08:15", level: "urgent", title: "Keynote moved to Main Auditorium", body: "Professor Wubah's keynote will now take place in the Main Auditorium at 09:30. Please arrive 15 minutes early — seating is on a first-come basis." },
-  { id: 2, when: "Today · 07:40", level: "info", title: "Conference shuttle from Nakuru Town", body: "Free shuttle leaves Merica Hotel at 07:00 and 13:00. Show your badge to the driver." },
+  { id: 1, when: "Today · 08:15", level: "urgent", title: "Reminder to Register for Desired Breakout Rooms", body: "Please register for your preferred Day 1 and Day 2 breakout sessions. Visit the Breakout Rooms section to view topics, moderators, and join your chosen Zoom room." },
   { id: 3, when: "Yesterday · 18:00", level: "info", title: "Book of Abstracts now live", body: "The Book of Abstracts has been published. Use the Abstracts tab to browse or download the PDF." },
-  { id: 4, when: "Yesterday · 12:10", level: "success", title: "Wi-Fi: AHC2026 / password: shared-future", body: "Conference Wi-Fi is open to all registered attendees throughout the venue." },
+  { id: 4, when: "Yesterday · 12:10", level: "success", title: "Updated Conference Program", body: "The latest AHC 2026 program is now available. Visit the Schedule section to view or download the full program PDF." },
 ];
 
 export const GALLERY = [
