@@ -42,3 +42,15 @@ export function spreadsheetEmbedUrl(sheetUrl: string): string | null {
   if (!match) return null;
   return `https://docs.google.com/spreadsheets/d/${match[1]}/htmlembed?widget=true&headers=false`;
 }
+
+export function drivePdfEmbedUrl(pdfUrl: string): string | null {
+  const match = pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return null;
+  return `https://drive.google.com/file/d/${match[1]}/preview`;
+}
+
+export function drivePdfDownloadUrl(pdfUrl: string): string | null {
+  const match = pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return null;
+  return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+}

@@ -1,13 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader } from "@/components/AppShell";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { CONFERENCE } from "@/data/conference";
-import { fetchAbstracts } from "@/lib/api/client";
+import { fetchAbstracts, drivePdfEmbedUrl, drivePdfDownloadUrl } from "@/lib/api/client";
 import type { Abstract } from "@/lib/abstracts.server";
-import { useMemo, useState } from "react";
-import { Search, FileText, ExternalLink, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Search, FileText, Loader2, Download, Maximize2, Minimize2, X } from "lucide-react";
 
 export default function AbstractsPage() {
   const [q, setQ] = useState("");
+  const [pdfOpen, setPdfOpen] = useState(false);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["abstracts"],
     queryFn: () => fetchAbstracts(),
@@ -16,6 +25,7 @@ export default function AbstractsPage() {
 
   const abstracts = data?.abstracts ?? [];
   const fromSheet = data?.source === "sheet";
+  const pdfEmbed = drivePdfEmbedUrl(CONFERENCE.abstractsPdfUrl);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -34,7 +44,7 @@ export default function AbstractsPage() {
       <PageHeader
         eyebrow="Book of Abstracts"
         title="Search the full repository"
-        subtitle="Browse every accepted paper from the official spreadsheet. Filter by author, title, abstract code, or institution."
+        subtitle="Search accepted papers below or open the full Book of Abstracts PDF."
       />
 
       <div className="mb-5 flex flex-wrap gap-3">
@@ -47,15 +57,14 @@ export default function AbstractsPage() {
             className="w-full rounded-full border border-border bg-card py-2.5 pl-10 pr-4 text-sm text-foreground outline-none ring-ring focus:border-primary/50 focus:ring-2"
           />
         </div>
-        <a
-          href={CONFERENCE.driveAbstractsUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+        <button
+          type="button"
+          onClick={() => setPdfOpen(true)}
+          disabled={!pdfEmbed}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-95 disabled:opacity-50"
         >
-          <FileText className="h-4 w-4" /> Open spreadsheet
-          <ExternalLink className="h-3.5 w-3.5 opacity-80" />
-        </a>
+          <FileText className="h-4 w-4" /> Open full PDF
+        </button>
       </div>
 
       {isLoading && (
@@ -67,7 +76,7 @@ export default function AbstractsPage() {
 
       {!isLoading && isError && (
         <p className="mb-4 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-          Could not load the spreadsheet right now. Try opening it directly using the button above.
+          Could not load the abstract list right now. Open the full PDF to browse all papers.
         </p>
       )}
 
@@ -89,7 +98,113 @@ export default function AbstractsPage() {
           )}
         </ul>
       </div>
+
+      <AbstractsPdfDialog
+        open={pdfOpen}
+        onOpenChange={setPdfOpen}
+        embedUrl={pdfEmbed}
+        downloadUrl={drivePdfDownloadUrl(CONFERENCE.abstractsPdfUrl)}
+      />
     </AppShell>
+  );
+}
+
+function modalIconButtonClass() {
+  return "inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
+}
+
+function AbstractsPdfDialog({
+  open,
+  onOpenChange,
+  embedUrl,
+  downloadUrl,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  embedUrl: string | null;
+  downloadUrl: string | null;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  const handleOpenChange = (next: boolean) => {
+    if (!next && document.fullscreenElement) {
+      void document.exitFullscreen();
+    }
+    onOpenChange(next);
+  };
+
+  const toggleFullscreen = async () => {
+    if (!containerRef.current) return;
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await containerRef.current.requestFullscreen();
+      }
+    } catch {
+      // Fullscreen may be blocked by the browser
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        ref={containerRef}
+        hideCloseButton
+        className="flex h-[92dvh] w-[96vw] max-w-5xl flex-col gap-0 overflow-hidden bg-background p-0 data-[state=open]:sm:rounded-2xl [&:fullscreen]:h-screen [&:fullscreen]:w-screen [&:fullscreen]:max-w-none [&:fullscreen]:rounded-none"
+      >
+        <DialogHeader className="relative shrink-0 border-b border-border px-5 py-4 pr-36 text-left">
+          <DialogTitle className="font-display text-lg">Book of Abstracts (PDF)</DialogTitle>
+          <DialogDescription>SMHS Book of Abstracts 2026</DialogDescription>
+          <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1">
+            {downloadUrl && (
+              <a
+                href={downloadUrl}
+                download="SMHS-BOA-2026.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className={modalIconButtonClass()}
+                title="Download PDF"
+              >
+                <Download className="h-4 w-4" />
+                <span className="sr-only">Download PDF</span>
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => void toggleFullscreen()}
+              className={modalIconButtonClass()}
+              title={isFullscreen ? "Exit full screen" : "Full screen"}
+            >
+              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              <span className="sr-only">{isFullscreen ? "Exit full screen" : "Full screen"}</span>
+            </button>
+            <DialogClose className={modalIconButtonClass()} title="Close">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </div>
+        </DialogHeader>
+        {embedUrl && open && (
+          <iframe
+            src={embedUrl}
+            title="SMHS Book of Abstracts 2026"
+            className="min-h-0 flex-1 w-full border-0 bg-background"
+            loading="lazy"
+            allow="autoplay"
+          />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 

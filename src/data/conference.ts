@@ -12,6 +12,8 @@ export const CONFERENCE = {
   driveGalleryUrl: "https://photos.google.com/u/1/share/AF1QipPGMt6QZJhPk0qwRnT6mmoKJrTn8i6yg5MH5nQUkqzyBj0dcgy47EeVWcntNPHEnw?key=eVhpZzl5YzM2bjY5R1VDamVUWFZ1aktybmRROUV3",
   driveAbstractsUrl:
     "https://docs.google.com/spreadsheets/d/1-g8AOEs7IEg55mo2iw_CcC-TwBv4lha3/edit?usp=sharing",
+  abstractsPdfUrl:
+    "https://drive.google.com/file/d/1gI1kkFb_hKgKMm9Fowk-YSiYT0BXMGh4/view?usp=sharing",
   feedbackFormUrl:
     "https://docs.google.com/forms/d/e/1FAIpQLScBC341XratqO45cH4smFBQ2aTQNzv3NorSGjuHMvKi4hWw9w/viewform?usp=sharing&ouid=108396909533377471737",
   feedbackFormTitle: "16th Annual Health Conference — Evaluation Form",
