@@ -8,7 +8,10 @@ export const CONFERENCE = {
   theme:
     "Building Resilient Health Systems Through Innovation, Equity, and Multisectoral Action to Advance Universal Health Coverage",
   tagline: "Stronger Systems, Healthier Communities, Shared Future",
-  driveScheduleUrl: "https://drive.google.com/drive/folders/your-schedule-folder-id",
+  driveScheduleUrl:
+    "https://drive.google.com/file/d/13LnZKxFZtD3vqF2HapNn8Pv-2pj1WLrk/view?usp=sharing",
+  schedulePdfUrl:
+    "https://drive.google.com/file/d/13LnZKxFZtD3vqF2HapNn8Pv-2pj1WLrk/view?usp=sharing",
   driveGalleryUrl: "https://photos.google.com/u/1/share/AF1QipPGMt6QZJhPk0qwRnT6mmoKJrTn8i6yg5MH5nQUkqzyBj0dcgy47EeVWcntNPHEnw?key=eVhpZzl5YzM2bjY5R1VDamVUWFZ1aktybmRROUV3",
   driveAbstractsUrl:
     "https://docs.google.com/spreadsheets/d/1-g8AOEs7IEg55mo2iw_CcC-TwBv4lha3/edit?usp=sharing",

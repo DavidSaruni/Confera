@@ -1,48 +1,61 @@
-import { AppShell, PageHeader, isConfiguredExternalUrl } from "@/components/AppShell";
-import { SCHEDULE, CONFERENCE } from "@/data/conference";
-import { ExternalLink } from "lucide-react";
+import { AppShell, PageHeader } from "@/components/AppShell";
+import { CONFERENCE } from "@/data/conference";
+import { drivePdfDownloadUrl, drivePdfEmbedUrl } from "@/lib/api/client";
+import { Download, ExternalLink } from "lucide-react";
+
+const pdfEmbed = drivePdfEmbedUrl(CONFERENCE.schedulePdfUrl);
+const pdfDownload = drivePdfDownloadUrl(CONFERENCE.schedulePdfUrl);
 
 export default function SchedulePage() {
-  const showDriveLink = isConfiguredExternalUrl(CONFERENCE.driveScheduleUrl);
-
   return (
     <AppShell>
       <PageHeader
         eyebrow="Program"
         title="Conference schedule"
-        subtitle="Two days of keynotes, plenaries and breakout rounds. Last-minute changes will appear here first."
+        subtitle="Official AHC 2026 program. Last-minute changes will be reflected in the PDF below."
       />
-      {showDriveLink && (
+
+      <div className="mb-6 flex flex-wrap items-center gap-3">
         <a
-          href={CONFERENCE.driveScheduleUrl}
+          href={CONFERENCE.schedulePdfUrl}
           target="_blank"
           rel="noreferrer"
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
         >
-          Open Google Drive folder <ExternalLink className="h-3.5 w-3.5" />
+          Open PDF in new tab <ExternalLink className="h-3.5 w-3.5" />
         </a>
-      )}
-
-      <div className="space-y-10">
-        {SCHEDULE.map((day) => (
-          <section key={day.day}>
-            <h2 className="font-display text-xl text-foreground">{day.day}</h2>
-            <div className="gold-rule mt-2 mb-4 h-px" />
-            <ol className="relative space-y-0 border-l border-border pl-5">
-              {day.items.map((it, i) => (
-                <li key={i} className="relative pb-5 last:pb-0">
-                  <span className="absolute -left-[26px] top-1.5 inline-block h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-background" />
-                  <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                    <span className="font-display text-lg text-primary">{it.time}</span>
-                    <span className="font-medium text-foreground">{it.title}</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground">{it.room}</div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ))}
+        {pdfDownload && (
+          <a
+            href={pdfDownload}
+            download="AHC-Program-2026.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+          >
+            Download PDF <Download className="h-3.5 w-3.5" />
+          </a>
+        )}
       </div>
+
+      {pdfEmbed ? (
+        <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
+          <iframe
+            src={pdfEmbed}
+            title="AHC 2026 Conference Program"
+            className="block min-h-[85vh] w-full border-0 bg-background"
+            loading="lazy"
+            allow="autoplay"
+          />
+        </section>
+      ) : (
+        <p className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+          The program PDF could not be loaded.{" "}
+          <a href={CONFERENCE.schedulePdfUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+            Open it on Google Drive
+          </a>
+          .
+        </p>
+      )}
     </AppShell>
   );
 }
