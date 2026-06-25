@@ -1,19 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { AppShell, PageHeader } from "@/components/AppShell";
+import { AppShell, PageHeader, isConfiguredExternalUrl } from "@/components/AppShell";
 import { FeedbackChartCard } from "@/components/FeedbackCharts";
 import { CONFERENCE } from "@/data/conference";
 import { fetchFeedbackStatsOnly, spreadsheetEmbedUrl } from "@/lib/api/client";
 import { toFeedbackEmbedUrl } from "@/lib/feedback.server";
 import type { FeedbackStats } from "@/lib/feedback.server";
-import { BarChart3, ExternalLink, Loader2, RefreshCw, Star } from "lucide-react";
+import { BarChart3, ExternalLink, Loader2, MessageSquare, RefreshCw, Star } from "lucide-react";
 
-const embedUrl = toFeedbackEmbedUrl(CONFERENCE.feedbackFormUrl);
+const formConfigured = isConfiguredExternalUrl(CONFERENCE.feedbackFormUrl);
+const embedUrl = formConfigured ? toFeedbackEmbedUrl(CONFERENCE.feedbackFormUrl) : null;
 const formUrl = CONFERENCE.feedbackFormUrl;
 
 export default function FeedbackPage() {
   const { data: stats, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["feedback-stats"],
     queryFn: () => fetchFeedbackStatsOnly(),
+    enabled: formConfigured,
     refetchInterval: 60_000,
     staleTime: 30_000,
   });
@@ -23,45 +25,67 @@ export default function FeedbackPage() {
       <PageHeader
         eyebrow="Feedback"
         title="Conference evaluation"
-        subtitle="Complete the official evaluation form below. Response summaries adapt automatically to whichever form and linked spreadsheet you share."
+        subtitle={
+          formConfigured
+            ? "Complete the official evaluation form below. Response summaries adapt automatically to whichever form and linked spreadsheet you share."
+            : "The conference evaluation form will be published here shortly. Check back after the sessions."
+        }
       />
 
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <a
-          href={formUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
-        >
-          Open form in new tab <ExternalLink className="h-3.5 w-3.5" />
-        </a>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40 disabled:opacity-60"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
-          Refresh stats
-        </button>
-      </div>
+      {!formConfigured ? (
+        <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
+          <div className="flex flex-col items-center px-6 py-16 text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MessageSquare className="h-7 w-7" />
+            </div>
+            <h2 className="font-display text-xl text-foreground">Feedback form coming soon</h2>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+              The evaluation link will appear here once it is ready. You will be able to submit your feedback and view live response summaries.
+            </p>
+          </div>
+        </section>
+      ) : (
+        <>
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <a
+              href={formUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+            >
+              Open form in new tab <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40 disabled:opacity-60"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
+              Refresh stats
+            </button>
+          </div>
 
-      <section className="mb-8 overflow-hidden rounded-2xl border border-border bg-card card-elev">
-        <div className="border-b border-border px-5 py-4">
-          <h2 className="font-display text-lg text-foreground">Evaluation form</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {CONFERENCE.feedbackFormTitle ?? "Submit your evaluation using the embedded form below."}
-          </p>
-        </div>
-        <iframe
-          src={embedUrl}
-          title={CONFERENCE.feedbackFormTitle ?? "Conference evaluation form"}
-          className="block min-h-[2200px] w-full border-0 bg-background"
-          loading="lazy"
-        />
-      </section>
+          <section className="mb-8 overflow-hidden rounded-2xl border border-border bg-card card-elev">
+            <div className="border-b border-border px-5 py-4">
+              <h2 className="font-display text-lg text-foreground">Evaluation form</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {CONFERENCE.feedbackFormTitle ?? "Submit your evaluation using the embedded form below."}
+              </p>
+            </div>
+            {embedUrl && (
+              <iframe
+                src={embedUrl}
+                title={CONFERENCE.feedbackFormTitle ?? "Conference evaluation form"}
+                className="block min-h-[2200px] w-full border-0 bg-background"
+                loading="lazy"
+              />
+            )}
+          </section>
 
-      <FeedbackSummary stats={stats} isLoading={isLoading} isError={isError} />
+          <FeedbackSummary stats={stats} isLoading={isLoading} isError={isError} />
+        </>
+      )}
     </AppShell>
   );
 }
