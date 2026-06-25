@@ -17,8 +17,9 @@ export const CONFERENCE = {
     "https://docs.google.com/spreadsheets/d/1-g8AOEs7IEg55mo2iw_CcC-TwBv4lha3/edit?usp=sharing",
   abstractsPdfUrl:
     "https://drive.google.com/file/d/1gI1kkFb_hKgKMm9Fowk-YSiYT0BXMGh4/view?usp=sharing",
-  feedbackFormUrl: "",
-  feedbackFormTitle: "16th Annual Health Conference — Evaluation Form",
+  feedbackFormUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLSelICE6S7AfPu3Rc9pLjS0X07Xti-k6IsdrycAr9PEUvtpY1A/viewform?usp=publish-editor",
+  feedbackFormTitle: "Annual Health Conference Evaluation",
   // Link the form to Google Sheets (Responses → Link to Sheets), share the sheet, then paste its URL here.
   feedbackResponsesSheetUrl: "",
 };
