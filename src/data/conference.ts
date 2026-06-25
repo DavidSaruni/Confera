@@ -21,7 +21,8 @@ export const CONFERENCE = {
     "https://docs.google.com/forms/d/e/1FAIpQLSelICE6S7AfPu3Rc9pLjS0X07Xti-k6IsdrycAr9PEUvtpY1A/viewform?usp=publish-editor",
   feedbackFormTitle: "Annual Health Conference Evaluation",
   // Link the form to Google Sheets (Responses → Link to Sheets), share the sheet, then paste its URL here.
-  feedbackResponsesSheetUrl: "",
+  feedbackResponsesSheetUrl:
+    "https://docs.google.com/spreadsheets/d/1FGmp8GHz6d7MqPfsVq6itqqUTj0B77KrKrRo2J-sogc/edit?usp=sharing",
 };
 
 import wubahPhoto from "@/public/images/speakers/wubah.jpg";
