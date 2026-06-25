@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppShell, PageHeader, isConfiguredExternalUrl } from "@/components/AppShell";
 import { FeedbackChartCard } from "@/components/FeedbackCharts";
 import { CONFERENCE } from "@/data/conference";
-import { fetchFeedbackStatsOnly, spreadsheetEmbedUrl } from "@/lib/api/client";
+import { fetchFeedbackStatsOnly } from "@/lib/api/client";
 import { toFeedbackEmbedUrl } from "@/lib/feedback.server";
 import type { FeedbackStats } from "@/lib/feedback.server";
 import { BarChart3, ExternalLink, Loader2, MessageSquare, RefreshCw, Star } from "lucide-react";
@@ -27,7 +27,7 @@ export default function FeedbackPage() {
         title="Conference evaluation"
         subtitle={
           formConfigured
-            ? "Complete the official evaluation form below. Response summaries adapt automatically to whichever form and linked spreadsheet you share."
+            ? "Complete the official evaluation form below. Live response summaries update automatically as attendees submit feedback."
             : "The conference evaluation form will be published here shortly. Check back after the sessions."
         }
       />
@@ -111,26 +111,9 @@ function FeedbackSummary({
   }
 
   if (isError || !stats) {
-    const sheetEmbed = spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl);
     return (
-      <div className="space-y-4">
-        <div className="rounded-2xl border border-border bg-card p-6 card-elev">
-          <p className="text-sm text-muted-foreground">Could not load response statistics.</p>
-        </div>
-        {sheetEmbed && (
-          <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
-            <div className="border-b border-border px-5 py-4">
-              <h2 className="font-display text-lg text-foreground">Responses spreadsheet</h2>
-              <p className="mt-1 text-xs text-muted-foreground">View raw form responses in Google Sheets.</p>
-            </div>
-            <iframe
-              src={sheetEmbed}
-              title="Feedback responses spreadsheet"
-              className="block min-h-[500px] w-full border-0 bg-background"
-              loading="lazy"
-            />
-          </section>
-        )}
+      <div className="rounded-2xl border border-border bg-card p-6 card-elev">
+        <p className="text-sm text-muted-foreground">Could not load response statistics.</p>
       </div>
     );
   }
@@ -171,21 +154,6 @@ function FeedbackSummary({
           </p>
         )}
       </div>
-
-      {stats.source === "unavailable" && spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl) && (
-        <section className="overflow-hidden rounded-2xl border border-border bg-card card-elev">
-          <div className="border-b border-border px-5 py-4">
-            <h2 className="font-display text-lg text-foreground">Responses spreadsheet</h2>
-            <p className="mt-1 text-xs text-muted-foreground">View raw form responses in Google Sheets.</p>
-          </div>
-          <iframe
-            src={spreadsheetEmbedUrl(CONFERENCE.feedbackResponsesSheetUrl)!}
-            title="Feedback responses spreadsheet"
-            className="block min-h-[500px] w-full border-0 bg-background"
-            loading="lazy"
-          />
-        </section>
-      )}
 
       {stats.charts.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
