@@ -220,7 +220,7 @@ export const BREAKOUTS: BreakoutSession[] = [
     time: "14:20 – 16:30",
     topic: "Health Technology, Innovation, and Pharmaceutical Sciences",
     moderators: [
-      { name: "Dr. Thrizza Kiplagat", school: "School of Pharmacy" },
+      { name: "Dr. James Meroka", school: "School of Pharmacy" },
       { name: "Dr. Benard Kioko", school: "School of Pharmacy" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
