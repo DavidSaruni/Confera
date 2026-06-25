@@ -74,8 +74,15 @@ function BreakoutCard({ session }: { session: (typeof BREAKOUTS)[number] }) {
         </ul>
       </div>
 
-      <div className="mt-4 text-xs text-muted-foreground">
-        <span className="font-medium text-foreground/80">Session Rapporteur:</span> {session.rapporteur}
+      <div className="mt-4 space-y-2 text-xs text-muted-foreground">
+        <div>
+          <span className="font-medium text-foreground/80">Session Rapporteur:</span> {session.rapporteur}
+        </div>
+        {session.venue && (
+          <div>
+            <span className="font-medium text-foreground/80">Venue:</span> {session.venue}
+          </div>
+        )}
       </div>
 
       {hasLink ? (

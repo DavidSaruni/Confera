@@ -208,6 +208,7 @@ export type BreakoutSession = {
   topic: string;
   moderators: BreakoutModerator[];
   rapporteur: string;
+  venue?: string;
   link?: string | null;
 };
 
@@ -223,6 +224,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Benard Kioko", school: "School of Pharmacy" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
+    venue: "Sawia Auditorium",
     link: "https://kabarak-ac-ke.zoom.us/j/85043184504",
   },
   {
@@ -237,6 +239,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Ms. Valerie Suge", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
+    venue: "SOP, Postgraduate Room",
     link: "https://kabarak-ac-ke.zoom.us/j/81962756897",
   },
   {
@@ -251,6 +254,7 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Jonathan Nthusi", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
+    venue: "Katiba Auditorium",
     link: "https://kabarak-ac-ke.zoom.us/j/89745671901",
   },
   {
