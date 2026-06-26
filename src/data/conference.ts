@@ -12,7 +12,7 @@ export const CONFERENCE = {
     "https://drive.google.com/file/d/13LnZKxFZtD3vqF2HapNn8Pv-2pj1WLrk/view?usp=sharing",
   schedulePdfUrl:
     "https://drive.google.com/file/d/13LnZKxFZtD3vqF2HapNn8Pv-2pj1WLrk/view?usp=sharing",
-  driveGalleryUrl: "https://photos.google.com/u/1/share/AF1QipPGMt6QZJhPk0qwRnT6mmoKJrTn8i6yg5MH5nQUkqzyBj0dcgy47EeVWcntNPHEnw?key=eVhpZzl5YzM2bjY5R1VDamVUWFZ1aktybmRROUV3",
+  driveGalleryUrl: "https://kabuniv.direct.quickconnect.to:2025/sharing/z5pqNThJi",
   driveAbstractsUrl:
     "https://docs.google.com/spreadsheets/d/1-g8AOEs7IEg55mo2iw_CcC-TwBv4lha3/edit?usp=sharing",
   abstractsPdfUrl:
@@ -261,7 +261,7 @@ export const BREAKOUTS: BreakoutSession[] = [
     id: "day2-breakout-1",
     dayLabel: "Day 2 — Friday, 26 June 2026",
     sessionLabel: "Breakout 1",
-    time: "08:40 – 09:40",
+    time: "14:00 – 16:00",
     topic: "Nutrition, Health Technology, Pediatric Care and Lifestyle Interventions",
     moderators: [
       { name: "Dr. Phyllis Waruguru", school: "School of Medicine and Health Sciences" },
@@ -269,33 +269,36 @@ export const BREAKOUTS: BreakoutSession[] = [
       { name: "Dr. Shadrack Bett", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
+    venue: "Sawia Auditorium",
     link: "https://kabarak-ac-ke.zoom.us/j/85124506254",
   },
   {
     id: "day2-breakout-2",
     dayLabel: "Day 2 — Friday, 26 June 2026",
     sessionLabel: "Breakout 2",
-    time: "08:40 – 09:40",
+    time: "14:00 – 16:00",
     topic: "Emergency Response, Maternal-Newborn Health and Workforce Resilience",
     moderators: [
       { name: "Dr. Jonathan Nthusi", school: "School of Medicine and Health Sciences" },
       { name: "Dr. Norah Talam", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
+    venue: "SOP, Postgraduate Room",
     link: "https://kabarak-ac-ke.zoom.us/j/84528541990",
   },
   {
     id: "day2-breakout-3",
     dayLabel: "Day 2 — Friday, 26 June 2026",
     sessionLabel: "Breakout 3",
-    time: "08:40 – 09:40",
+    time: "14:00 – 16:00",
     topic: "Preventive Health, Prediction Tools and Occupational Determinants",
     moderators: [
       { name: "Dr. Doris Kibiwott", school: "School of Medicine and Health Sciences" },
       { name: "Mr. Samuel Kingi", school: "School of Medicine and Health Sciences" },
     ],
     rapporteur: "SMHS & SOP (TBC)",
-    link: "https://kabarak-ac-ke.zoom.us/j/88611721780",
+    venue: "Katiba Auditorium",
+    link: "https://kabarak-ac-ke.zoom.us/j/82233125722",
   },
 ];
 

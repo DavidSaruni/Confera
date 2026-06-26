@@ -1,8 +1,13 @@
 import { CONFERENCE, ABSTRACTS, GALLERY } from "@/data/conference";
 import { fetchAbstractsFromSheet } from "@/lib/abstracts.server";
 import { fetchFeedbackStats } from "@/lib/feedback.server";
+import { isSynologySharingUrl } from "@/lib/gallery";
 
 export async function fetchGalleryImages() {
+  if (isSynologySharingUrl(CONFERENCE.driveGalleryUrl)) {
+    return { images: [], source: "external" as const };
+  }
+
   const albumUrl = encodeURIComponent(CONFERENCE.driveGalleryUrl);
   try {
     const response = await fetch(`/api/gallery?url=${albumUrl}`);

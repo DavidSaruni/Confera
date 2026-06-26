@@ -3,25 +3,27 @@ import { AppShell, PageHeader } from "@/components/AppShell";
 import { CONFERENCE } from "@/data/conference";
 import { fetchGalleryImages } from "@/lib/api/client";
 import {
+  embeddedGalleryUrl,
   galleryLinkLabel,
-  isGoogleDriveFolderUrl,
-  toDriveFolderEmbedUrl,
+  isEmbeddedGalleryUrl,
+  isSynologySharingUrl,
 } from "@/lib/gallery";
 import { ExternalLink, ImageIcon, Loader2 } from "lucide-react";
 
 export default function GalleryPage() {
   const albumUrl = CONFERENCE.driveGalleryUrl;
-  const driveEmbed = toDriveFolderEmbedUrl(albumUrl);
-  const isDriveFolder = isGoogleDriveFolderUrl(albumUrl);
+  const galleryEmbed = embeddedGalleryUrl(albumUrl);
+  const useEmbed = isEmbeddedGalleryUrl(albumUrl);
+  const isSynologyGallery = isSynologySharingUrl(albumUrl);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["gallery-images", albumUrl],
     queryFn: () => fetchGalleryImages(),
     staleTime: 60 * 60 * 1000,
-    enabled: !isDriveFolder,
+    enabled: !useEmbed && !isSynologyGallery,
   });
 
-  const images = isDriveFolder ? [] : (data?.images ?? []);
+  const images = useEmbed || isSynologyGallery ? [] : (data?.images ?? []);
   const fromShare = data?.source === "share";
 
   return (
@@ -29,75 +31,98 @@ export default function GalleryPage() {
       <PageHeader
         eyebrow="Gallery"
         title="Moments from AHC 2026"
-        subtitle="Browse conference photos below. Images are loaded from the official shared album."
+        subtitle={
+          isSynologyGallery
+            ? "Conference photos are hosted on the KABU shared gallery. Open the link below to browse the full album."
+            : "Browse conference photos below from the official shared gallery."
+        }
       />
 
-      <a
-        href={albumUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
-      >
-        {galleryLinkLabel(albumUrl)} <ExternalLink className="h-3.5 w-3.5" />
-      </a>
-
-      {isDriveFolder && driveEmbed && (
-        <section className="mb-8 overflow-hidden rounded-2xl border border-border bg-card card-elev">
-          <iframe
-            src={driveEmbed}
-            title="AHC 2026 photo gallery"
-            className="block min-h-[75vh] w-full border-0 bg-background"
-            loading="lazy"
-            allow="autoplay"
-          />
-        </section>
-      )}
-
-      {!isDriveFolder && isLoading && (
-        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Loading photos from the shared album…
-        </div>
-      )}
-
-      {!isDriveFolder && !isLoading && isError && (
-        <p className="mb-6 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-          Could not load the shared album right now. Try opening the album link above.
-        </p>
-      )}
-
-      {!isDriveFolder && !isLoading && images.length === 0 && (
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
-          <ImageIcon className="h-10 w-10 text-muted-foreground/60" />
+      {isSynologyGallery ? (
+        <section className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-card px-6 py-16 text-center card-elev">
+          <ImageIcon className="h-12 w-12 text-primary/70" />
           <p className="max-w-md text-sm text-muted-foreground">
-            No photos are available yet. Check back after the conference or open the shared album link above.
+            Photos from AHC 2026 are available in the official KABU Backup Drive gallery.
           </p>
-        </div>
-      )}
-
-      {!isDriveFolder && images.length > 0 && (
+          <a
+            href={albumUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-medium text-foreground hover:border-primary/50"
+          >
+            {galleryLinkLabel(albumUrl)} <ExternalLink className="h-4 w-4" />
+          </a>
+        </section>
+      ) : (
         <>
-          {fromShare && (
-            <p className="mb-4 text-xs text-muted-foreground">
-              Showing {images.length} photo{images.length === 1 ? "" : "s"} from the shared album.
+          <a
+            href={albumUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground hover:border-primary/40"
+          >
+            {galleryLinkLabel(albumUrl)} <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+
+          {useEmbed && galleryEmbed && (
+            <section className="mb-8 overflow-hidden rounded-2xl border border-border bg-card card-elev">
+              <iframe
+                src={galleryEmbed}
+                title="AHC 2026 photo gallery"
+                className="block min-h-[75vh] w-full border-0 bg-background"
+                loading="lazy"
+                allow="autoplay"
+              />
+            </section>
+          )}
+
+          {!useEmbed && isLoading && (
+            <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading photos from the shared album…
+            </div>
+          )}
+
+          {!useEmbed && !isLoading && isError && (
+            <p className="mb-6 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+              Could not load the shared album right now. Try opening the album link above.
             </p>
           )}
-          <div className="columns-2 gap-3 sm:columns-3 [&>*]:mb-3">
-            {images.map((src, i) => (
-              <div
-                key={`${src}-${i}`}
-                className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card card-elev"
-              >
-                <img
-                  src={src}
-                  alt={`Conference moment ${i + 1}`}
-                  loading="lazy"
-                  className="block w-full"
-                  referrerPolicy="no-referrer"
-                />
+
+          {!useEmbed && !isLoading && images.length === 0 && (
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
+              <ImageIcon className="h-10 w-10 text-muted-foreground/60" />
+              <p className="max-w-md text-sm text-muted-foreground">
+                No photos are available yet. Check back after the conference or open the shared album link above.
+              </p>
+            </div>
+          )}
+
+          {!useEmbed && images.length > 0 && (
+            <>
+              {fromShare && (
+                <p className="mb-4 text-xs text-muted-foreground">
+                  Showing {images.length} photo{images.length === 1 ? "" : "s"} from the shared album.
+                </p>
+              )}
+              <div className="columns-2 gap-3 sm:columns-3 [&>*]:mb-3">
+                {images.map((src, i) => (
+                  <div
+                    key={`${src}-${i}`}
+                    className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card card-elev"
+                  >
+                    <img
+                      src={src}
+                      alt={`Conference moment ${i + 1}`}
+                      loading="lazy"
+                      className="block w-full"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </>
       )}
     </AppShell>
