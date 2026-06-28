@@ -78,17 +78,6 @@ export const SPEAKERS: Speaker[] = [
     photoPosition: "center",
   },
   {
-    name: "Billy Tomno",
-    role: "Speaker / Presenter",
-    title: "Student Presenter — Oral / Poster",
-    affiliation: "Kabarak University",
-    session: "Abstract 799 · Lunch & Poster Session — Day 1",
-    bio: "Postgraduate researcher at Kabarak University presenting on strengthening community-based health surveillance in rural Kenya.",
-    accent: "primary",
-    email: "healthconference@kabarak.ac.ke",
-    abstractCode: "799",
-  },
-  {
     name: "Kasoki Devughe Desanges",
     role: "Speaker / Presenter",
     title: "Kenyan Delegate — Oral / Poster",
